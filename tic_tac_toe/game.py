@@ -43,9 +43,9 @@ def play_tic_tac_toe():
             _, reward, done = game.step((player_x, player_y))  # Player's move
             if done:
                 game.render()
-                if reward == 1:
+                if reward > 0:
                     print("Player wins!")
-                elif reward == -1:
+                elif reward < 0:
                     print("AI wins!")
                 else:
                     print("Draw!")
@@ -64,9 +64,9 @@ def play_tic_tac_toe():
         
         if done:
             game.render()
-            if reward == 1:
+            if reward > 0:
                 print("AI wins!")
-            elif reward == -1:
+            elif reward < 0:
                 print("Player wins!")
             else:
                 print("Draw!")
