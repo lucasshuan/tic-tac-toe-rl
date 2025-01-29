@@ -25,25 +25,24 @@ class QLearningAgent:
         max_future_q = max([self.get_q_value(next_state, a) for a in env.available_actions()], default=0)
         self.q_table[(state, action)] = (1 - self.alpha) * self.get_q_value(state, action) + self.alpha * (reward + self.gamma * max_future_q)
 
-    def choose_action(self, state, available_actions, game_env):
-        # First, check if the AI has a winning move
-        winning_move = game_env.check_win_move(self.current_player)
-        if winning_move:
-            return winning_move, 1  # Reward for making a winning move
+    def choose_action(self, env: TicTacToeEnv):
+        state = env.get_state()
 
-        # Then, check if the AI needs to block the opponent
-        blocking_move = game_env.check_block_move(self.current_player)
-        if blocking_move:
-            return blocking_move, 0.5  # Reward for blocking the opponent
+        # Check for winning and blocking moves first
+        for check_move in [env.check_win_move, env.check_block_move]:
+            move = check_move(env.current_player)
+            if move:
+                return move
 
-        # If no win or block, choose randomly or based on the Q-table
+        available_actions = env.available_actions()
+
+        # Decide to explore or exploit
         if random.uniform(0, 1) < self.epsilon:
-            return random.choice(available_actions), 0  # Explore
-        else:
-            # Exploit: choose the best action based on the Q-table
-            state_q_values = {action: self.q_table.get((state, action), 0) for action in available_actions}
-            best_action = max(state_q_values, key=state_q_values.get)
-            return best_action, 0  # No immediate win/block, just the best known action
+            return random.choice(available_actions)  # Explore: random action
+
+        # Exploit: choose the best action based on the Q-table
+        best_action = max(available_actions, key=lambda action: self.q_table.get((state, action), 0))
+        return best_action
     
     def decay_epsilon(self):
         """Reduces exploration over time"""

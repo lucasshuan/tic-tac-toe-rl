@@ -10,7 +10,7 @@ def get_random_move(env: TicTacToeEnv):
 
 def get_ai_move(env: TicTacToeEnv, agent: QLearningAgent):
     """Chooses an action using the agent's policy."""
-    return agent.choose_action(env.get_state(), env.available_actions())
+    return agent.choose_action(env)
 
 def get_player_move():
     """Prompts the player to enter their move."""
@@ -32,7 +32,7 @@ def play_tic_tac_toe():
 
     if not player_starts:
         time.sleep(1)
-        ai_move = get_ai_move(game)
+        ai_move = get_ai_move(game, agent)
         _, _, done = game.step(ai_move)  # AI makes the first move
         game.render()
 
@@ -65,9 +65,9 @@ def play_tic_tac_toe():
         if done:
             game.render()
             if reward == 1:
-                print("Player wins!")
-            elif reward == -1:
                 print("AI wins!")
+            elif reward == -1:
+                print("Player wins!")
             else:
                 print("Draw!")
             break

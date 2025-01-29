@@ -10,6 +10,7 @@ class TicTacToeEnv:
         """Resets the board and returns the initial state"""
         self.board = [[self.EMPTY for _ in range(3)] for _ in range(3)]
         self.current_player = self.X  # X always starts
+        self.turn_count = 1
         return self.get_state()
 
     def get_state(self):
@@ -20,18 +21,19 @@ class TicTacToeEnv:
         """Returns available moves as a list of (x, y) tuples"""
         return [(x, y) for x in range(3) for y in range(3) if self.board[x][y] == self.EMPTY]
 
-    def step(self, action):
-        """Performs an action (placing a marker), then switches turns"""
+    def step(self, action: tuple) -> tuple:
+        """Performs an action (placing a marker), then switches turns."""
         x, y = action
         if self.board[x][y] != self.EMPTY:
-            raise ValueError("Invalid move!")
+            raise ValueError(f"Invalid move at ({x}, {y})!")
 
         # Place the piece
         self.board[x][y] = self.current_player
 
         # Check for game end
         if self.check_win(self.current_player):
-            return self.get_state(), 1 if self.current_player == self.X else -1, True  # Reward 1 for win, -1 for loss
+            reward = 1 - (self.turn_count / 9)
+            return self.get_state(), reward if self.current_player == self.X else -reward, True
         elif not self.available_actions():
             return self.get_state(), 0, True  # Draw
 

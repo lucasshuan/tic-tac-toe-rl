@@ -5,14 +5,14 @@ import pickle
 env = TicTacToeEnv()
 agent = QLearningAgent()
 
-num_episodes = 10000  # Number of training games
+num_episodes = 20000 # Number of training games
 
 for episode in range(num_episodes):
     state = env.reset()
     done = False
 
     while not done:
-        action = agent.choose_action(state, env.available_actions())
+        action = agent.choose_action(env)
         next_state, reward, done = env.step(action)
         agent.update_q_value(env, state, action, reward, next_state)
         state = next_state
