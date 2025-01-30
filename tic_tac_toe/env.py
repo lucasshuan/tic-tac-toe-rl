@@ -52,6 +52,7 @@ class TicTacToeEnv:
         if all(self.board[i][i] == player for i in range(3)) or all(self.board[i][2 - i] == player for i in range(3)):
             return True
         return False
+    
     def check_win_move(self, player):
         """Check if a player can win in the next move"""
         for x, y in self.available_actions():

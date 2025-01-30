@@ -11,6 +11,7 @@ class QLearningAgent:
         self.epsilon_decay = epsilon_decay  # Decay over time
 
     def load_q_table(self, path):
+        """Loads the Q-table from a file"""
         with open(path, "rb") as f:
             self.q_table = pickle.load(f)
 
@@ -26,6 +27,7 @@ class QLearningAgent:
         self.q_table[(state, action)] = (1 - self.alpha) * self.get_q_value(state, action) + self.alpha * (reward + self.gamma * max_future_q)
 
     def choose_action(self, env: TicTacToeEnv):
+        """Returns the best action based on the current Q-table"""
         state = env.get_state()
 
         # Check for winning and blocking moves first
